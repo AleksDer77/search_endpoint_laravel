@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ProductSort;
 use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -22,7 +23,7 @@ class ProductsIndexRequest extends FormRequest
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'in_stock' => ['nullable', 'boolean'],
             'rating_from' => ['nullable', 'numeric', 'between:0,' . Product::MAX_RATING],
-            'sort' => ['nullable', Rule::in(['price_asc', 'price_desc', 'rating_desc', 'newest'])],
+            'sort' => ['nullable', Rule::enum(ProductSort::class)],
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
     }

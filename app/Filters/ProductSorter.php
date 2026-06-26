@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Enums\ProductSort;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductSorter
@@ -11,11 +12,13 @@ class ProductSorter
      */
     public function apply(Builder $query, ?string $sort): Builder
     {
-        return match ($sort) {
-            'price_asc'   => $query->orderBy('price', 'asc'),
-            'price_desc'  => $query->orderBy('price', 'desc'),
-            'rating_desc' => $query->orderBy('rating', 'desc'),
-            default       => $query->orderBy('created_at', 'desc'),
+        $sortEnum = ProductSort::tryFrom($sort) ?? ProductSort::NEWEST;
+
+        return match ($sortEnum) {
+            ProductSort::PRICE_ASC => $query->orderBy('price', 'asc'),
+            ProductSort::PRICE_DESC => $query->orderBy('price', 'desc'),
+            ProductSort::RATING_DESC => $query->orderBy('rating', 'desc'),
+            ProductSort::NEWEST => $query->orderBy('created_at', 'desc'),
         };
     }
 }
