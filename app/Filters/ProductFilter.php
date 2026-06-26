@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter
 {
+    public function __construct(
+        private readonly ProductSorter $sorter
+    ) {}
+
     /**
      * Apply the filters to the product query builder.
      */
@@ -35,7 +39,7 @@ class ProductFilter
             $query->where('rating', '>=', (float) $filters['rating_from']);
         }
 
-        app(ProductSorter::class)->apply($query, $filters['sort'] ?? null);
+        $this->sorter->apply($query, $filters['sort'] ?? null);
 
         return $query;
     }
