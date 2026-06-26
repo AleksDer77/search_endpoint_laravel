@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Filters\ProductFilter;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,7 +34,7 @@ class ProductFilterTest extends TestCase
             'category_id' => $category->id,
         ]);
 
-        $query = Product::filter([
+        $query = app(ProductFilter::class)->apply(Product::query(), [
             'q' => 'iPhone',
             'price_from' => 1000.0,
             'price_to' => 2000.0,
@@ -65,7 +66,7 @@ class ProductFilterTest extends TestCase
             'rating' => 4.8,
         ]);
 
-        $query = Product::filter([
+        $query = app(ProductFilter::class)->apply(Product::query(), [
             'category_id' => $categoryA->id,
             'in_stock' => true,
             'rating_from' => 4.5,
@@ -82,7 +83,7 @@ class ProductFilterTest extends TestCase
         $p2 = Product::factory()->create(['category_id' => $category->id, 'price' => 300.00]);
         $p3 = Product::factory()->create(['category_id' => $category->id, 'price' => 200.00]);
 
-        $query = Product::filter([
+        $query = app(ProductFilter::class)->apply(Product::query(), [
             'sort' => 'price_desc',
         ]);
 
@@ -102,7 +103,7 @@ class ProductFilterTest extends TestCase
             'created_at' => now(),
         ]);
 
-        $query = Product::filter([]);
+        $query = app(ProductFilter::class)->apply(Product::query(), []);
 
         $this->assertSame([$new->id, $old->id], $query->pluck('id')->all());
     }
