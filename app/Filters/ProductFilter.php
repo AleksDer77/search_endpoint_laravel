@@ -2,44 +2,33 @@
 
 namespace App\Filters;
 
+use App\Filters\Contracts\ProductFilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter
 {
+    /**
+     * @param ProductFilterInterface[] $filters
+     */
     public function __construct(
-        private readonly ProductSorter $sorter
+        private readonly ProductSorter $sorter,
+        private readonly array $filters,
     ) {}
 
     /**
-     * Apply the filters to the product query builder.
+     * Apply all registered filters and sorting to the query.
      */
-    public function apply(Builder $query, array $filters): Builder
+    public function apply(Builder $query, array $data): Builder
     {
-        if (!empty($filters['q'])) {
-            $query->where('name', 'LIKE', '%' . $filters['q'] . '%');
+        foreach ($this->filters as $filter) {
+            $value = $data[$filter->key()] ?? null;
+
+            if ($value !== null) {
+                $filter->apply($query, $value);
+            }
         }
 
-        if (isset($filters['price_from'])) {
-            $query->where('price', '>=', (float) $filters['price_from']);
-        }
-
-        if (isset($filters['price_to'])) {
-            $query->where('price', '<=', (float) $filters['price_to']);
-        }
-
-        if (!empty($filters['category_id'])) {
-            $query->where('category_id', (int) $filters['category_id']);
-        }
-
-        if (isset($filters['in_stock'])) {
-            $query->where('in_stock', filter_var($filters['in_stock'], FILTER_VALIDATE_BOOLEAN));
-        }
-
-        if (isset($filters['rating_from'])) {
-            $query->where('rating', '>=', (float) $filters['rating_from']);
-        }
-
-        $this->sorter->apply($query, $filters['sort'] ?? null);
+        $this->sorter->apply($query, $data['sort'] ?? null);
 
         return $query;
     }
