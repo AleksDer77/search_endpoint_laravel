@@ -2,13 +2,12 @@
 
 namespace Tests\Unit;
 
-use App\Filters\ProductQueryBuilder;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class ProductQueryBuilderTest extends TestCase
+class ProductFilterTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -34,7 +33,7 @@ class ProductQueryBuilderTest extends TestCase
             'category_id' => $category->id,
         ]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Product::query(), [
+        $query = Product::filter([
             'q' => 'iPhone',
             'price_from' => 1000.0,
             'price_to' => 2000.0,
@@ -66,7 +65,7 @@ class ProductQueryBuilderTest extends TestCase
             'rating' => 4.8,
         ]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Product::query(), [
+        $query = Product::filter([
             'category_id' => $categoryA->id,
             'in_stock' => true,
             'rating_from' => 4.5,
@@ -83,7 +82,7 @@ class ProductQueryBuilderTest extends TestCase
         $p2 = Product::factory()->create(['category_id' => $category->id, 'price' => 300.00]);
         $p3 = Product::factory()->create(['category_id' => $category->id, 'price' => 200.00]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Product::query(), [
+        $query = Product::filter([
             'sort' => 'price_desc',
         ]);
 
@@ -103,7 +102,7 @@ class ProductQueryBuilderTest extends TestCase
             'created_at' => now(),
         ]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Product::query(), []);
+        $query = Product::filter([]);
 
         $this->assertSame([$new->id, $old->id], $query->pluck('id')->all());
     }

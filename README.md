@@ -17,6 +17,6 @@ php artisan test
 ```
 
 ```bash
-php artisan test --filter=ProductQueryBuilderTest
+php artisan test --filter=ProductFilterTest
 php artisan test --filter=ProductsIndexEndpointTest
 ```

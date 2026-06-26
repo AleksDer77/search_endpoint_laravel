@@ -25,35 +25,4 @@ class ProductsIndexRequest extends FormRequest
             'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];
     }
-
-    protected function passedValidation(): void
-    {
-        $data = [];
-        $casts = [
-            'price_from' => 'float',
-            'price_to' => 'float',
-            'rating_from' => 'float',
-            'category_id' => 'int',
-            'per_page' => 'int',
-        ];
-
-        foreach ($casts as $field => $castType) {
-            if (! $this->has($field)) {
-                continue;
-            }
-
-            $data[$field] = match ($castType) {
-                'float' => (float) $this->input($field),
-                default => (int) $this->input($field),
-            };
-        }
-
-        if ($this->has('in_stock')) {
-            $data['in_stock'] = $this->boolean('in_stock');
-        }
-
-        if ($data !== []) {
-            $this->merge($data);
-        }
-    }
 }
