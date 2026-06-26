@@ -35,21 +35,8 @@ class ProductFilter
             $query->where('rating', '>=', (float) $filters['rating_from']);
         }
 
-        $this->sort($query, $filters['sort'] ?? 'newest');
+        app(ProductSorter::class)->apply($query, $filters['sort'] ?? null);
 
         return $query;
-    }
-
-    /**
-     * Apply sorting to the query builder.
-     */
-    private function sort(Builder $query, string $sort): void
-    {
-        match ($sort) {
-            'price_asc'   => $query->orderBy('price', 'asc'),
-            'price_desc'  => $query->orderBy('price', 'desc'),
-            'rating_desc' => $query->orderBy('rating', 'desc'),
-            default       => $query->orderBy('created_at', 'desc'),
-        };
     }
 }

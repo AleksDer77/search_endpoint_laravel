@@ -12,6 +12,8 @@ class Product extends Model
 {
     use HasFactory;
 
+    public const MAX_RATING = 5.0;
+
     protected $fillable = [
         'name',
         'price',
@@ -25,7 +27,7 @@ class Product extends Model
      */
     public function scopeFilter(Builder $query, array $filters): Builder
     {
-        return (new ProductFilter())->apply($query, $filters);
+        return app(ProductFilter::class)->apply($query, $filters);
     }
 
     /**

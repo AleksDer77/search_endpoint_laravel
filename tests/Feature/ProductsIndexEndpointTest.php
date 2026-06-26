@@ -94,4 +94,12 @@ class ProductsIndexEndpointTest extends TestCase
         $response->assertOk();
         $this->assertSame([$high->id, $mid->id, $low->id], array_column($response->json('data'), 'id'));
     }
+
+    public function test_it_validates_price_range_order(): void
+    {
+        $response = $this->getJson('/api/products?price_from=1000&price_to=500');
+
+        $response->assertStatus(422)
+            ->assertJsonValidationErrors(['price_to']);
+    }
 }
