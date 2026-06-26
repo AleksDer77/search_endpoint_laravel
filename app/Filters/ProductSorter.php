@@ -10,15 +10,15 @@ class ProductSorter
     /**
      * Apply sorting to the query builder.
      */
-    public function apply(Builder $query, ?string $sort): Builder
+    public function apply(Builder $query, ?ProductSort $sort): Builder
     {
-        $sortEnum = ProductSort::tryFrom($sort) ?? ProductSort::NEWEST;
+        $sortEnum = $sort ?? ProductSort::NEWEST;
 
         return match ($sortEnum) {
-            ProductSort::PRICE_ASC => $query->orderBy('price', 'asc'),
-            ProductSort::PRICE_DESC => $query->orderBy('price', 'desc'),
+            ProductSort::PRICE_ASC   => $query->orderBy('price', 'asc'),
+            ProductSort::PRICE_DESC  => $query->orderBy('price', 'desc'),
             ProductSort::RATING_DESC => $query->orderBy('rating', 'desc'),
-            ProductSort::NEWEST => $query->orderBy('created_at', 'desc'),
+            ProductSort::NEWEST      => $query->orderBy('created_at', 'desc'),
         };
     }
 }
