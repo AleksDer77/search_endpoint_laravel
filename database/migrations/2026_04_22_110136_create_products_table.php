@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -20,7 +21,11 @@ return new class extends Migration
             $table->float('rating')->default(0);
             $table->timestamps();
 
-            $table->index('name');
+            if (DB::connection()->getDriverName() !== 'sqlite') {
+                $table->fullText('name');
+            } else {
+                $table->index('name');
+            }
             $table->index('price');
             $table->index('rating');
             $table->index('created_at');

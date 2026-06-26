@@ -39,7 +39,11 @@ class ProductQueryBuilder
 
     private function q(Builder $query, string $value): void
     {
-        $query->where('name', 'like', '%' . $value . '%');
+        if ($query->getConnection()->getDriverName() === 'sqlite') {
+            $query->where('name', 'like', '%' . $value . '%');
+        } else {
+            $query->whereFullText('name', $value);
+        }
     }
 
     private function priceFrom(Builder $query, float $value): void

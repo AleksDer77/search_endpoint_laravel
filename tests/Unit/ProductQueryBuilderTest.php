@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Filters\ProductQueryBuilder;
 use App\Models\Category;
-use App\Models\Products;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,25 +16,25 @@ class ProductQueryBuilderTest extends TestCase
     {
         $category = Category::factory()->create();
 
-        $match = Products::factory()->create([
+        $match = Product::factory()->create([
             'name' => 'iPhone 15',
             'price' => 1500.00,
             'category_id' => $category->id,
         ]);
 
-        Products::factory()->create([
+        Product::factory()->create([
             'name' => 'Samsung Galaxy',
             'price' => 1200.00,
             'category_id' => $category->id,
         ]);
 
-        Products::factory()->create([
+        Product::factory()->create([
             'name' => 'iPhone SE',
             'price' => 500.00,
             'category_id' => $category->id,
         ]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Products::query(), [
+        $query = app(ProductQueryBuilder::class)->apply(Product::query(), [
             'q' => 'iPhone',
             'price_from' => 1000.0,
             'price_to' => 2000.0,
@@ -48,25 +48,25 @@ class ProductQueryBuilderTest extends TestCase
         $categoryA = Category::factory()->create();
         $categoryB = Category::factory()->create();
 
-        $match = Products::factory()->create([
+        $match = Product::factory()->create([
             'category_id' => $categoryA->id,
             'in_stock' => true,
             'rating' => 4.7,
         ]);
 
-        Products::factory()->create([
+        Product::factory()->create([
             'category_id' => $categoryA->id,
             'in_stock' => false,
             'rating' => 4.9,
         ]);
 
-        Products::factory()->create([
+        Product::factory()->create([
             'category_id' => $categoryB->id,
             'in_stock' => true,
             'rating' => 4.8,
         ]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Products::query(), [
+        $query = app(ProductQueryBuilder::class)->apply(Product::query(), [
             'category_id' => $categoryA->id,
             'in_stock' => true,
             'rating_from' => 4.5,
@@ -79,11 +79,11 @@ class ProductQueryBuilderTest extends TestCase
     {
         $category = Category::factory()->create();
 
-        $p1 = Products::factory()->create(['category_id' => $category->id, 'price' => 100.00]);
-        $p2 = Products::factory()->create(['category_id' => $category->id, 'price' => 300.00]);
-        $p3 = Products::factory()->create(['category_id' => $category->id, 'price' => 200.00]);
+        $p1 = Product::factory()->create(['category_id' => $category->id, 'price' => 100.00]);
+        $p2 = Product::factory()->create(['category_id' => $category->id, 'price' => 300.00]);
+        $p3 = Product::factory()->create(['category_id' => $category->id, 'price' => 200.00]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Products::query(), [
+        $query = app(ProductQueryBuilder::class)->apply(Product::query(), [
             'sort' => 'price_desc',
         ]);
 
@@ -94,16 +94,16 @@ class ProductQueryBuilderTest extends TestCase
     {
         $category = Category::factory()->create();
 
-        $old = Products::factory()->create([
+        $old = Product::factory()->create([
             'category_id' => $category->id,
             'created_at' => now()->subDays(2),
         ]);
-        $new = Products::factory()->create([
+        $new = Product::factory()->create([
             'category_id' => $category->id,
             'created_at' => now(),
         ]);
 
-        $query = app(ProductQueryBuilder::class)->apply(Products::query(), []);
+        $query = app(ProductQueryBuilder::class)->apply(Product::query(), []);
 
         $this->assertSame([$new->id, $old->id], $query->pluck('id')->all());
     }

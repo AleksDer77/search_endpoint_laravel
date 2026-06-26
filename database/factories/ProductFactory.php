@@ -3,15 +3,15 @@
 namespace Database\Factories;
 
 use App\Models\Category;
-use App\Models\Products;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Products>
+ * @extends Factory<Product>
  */
-class ProductsFactory extends Factory
+class ProductFactory extends Factory
 {
-    protected $model = Products::class;
+    protected $model = Product::class;
 
     public function definition(): array
     {

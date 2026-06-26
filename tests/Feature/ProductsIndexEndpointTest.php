@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
-use App\Models\Products;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,7 +13,7 @@ class ProductsIndexEndpointTest extends TestCase
 
     public function test_it_returns_paginated_products_response(): void
     {
-        Products::factory()->count(20)->create();
+        Product::factory()->count(20)->create();
 
         $response = $this->getJson('/api/products?per_page=5');
 
@@ -43,7 +43,7 @@ class ProductsIndexEndpointTest extends TestCase
         $categoryA = Category::factory()->create();
         $categoryB = Category::factory()->create();
 
-        $match = Products::factory()->create([
+        $match = Product::factory()->create([
             'name' => 'iPhone 15 Pro',
             'price' => 1299.99,
             'category_id' => $categoryA->id,
@@ -51,7 +51,7 @@ class ProductsIndexEndpointTest extends TestCase
             'rating' => 4.8,
         ]);
 
-        Products::factory()->create([
+        Product::factory()->create([
             'name' => 'iPhone SE',
             'price' => 499.99,
             'category_id' => $categoryA->id,
@@ -59,7 +59,7 @@ class ProductsIndexEndpointTest extends TestCase
             'rating' => 4.9,
         ]);
 
-        Products::factory()->create([
+        Product::factory()->create([
             'name' => 'iPhone 15 Pro',
             'price' => 1299.99,
             'category_id' => $categoryB->id,
@@ -67,7 +67,7 @@ class ProductsIndexEndpointTest extends TestCase
             'rating' => 4.9,
         ]);
 
-        Products::factory()->create([
+        Product::factory()->create([
             'name' => 'iPhone 15 Pro',
             'price' => 1299.99,
             'category_id' => $categoryA->id,
@@ -85,9 +85,9 @@ class ProductsIndexEndpointTest extends TestCase
     {
         $category = Category::factory()->create();
 
-        $low = Products::factory()->create(['category_id' => $category->id, 'price' => 100.00]);
-        $high = Products::factory()->create(['category_id' => $category->id, 'price' => 300.00]);
-        $mid = Products::factory()->create(['category_id' => $category->id, 'price' => 200.00]);
+        $low = Product::factory()->create(['category_id' => $category->id, 'price' => 100.00]);
+        $high = Product::factory()->create(['category_id' => $category->id, 'price' => 300.00]);
+        $mid = Product::factory()->create(['category_id' => $category->id, 'price' => 200.00]);
 
         $response = $this->getJson('/api/products?sort=price_desc');
 
