@@ -8,12 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter
 {
-    /**
-     * @param ProductFilterInterface[] $filters
-     */
     public function __construct(
         private readonly ProductSorter $sorter,
-        private readonly array $filters,
     ) {}
 
     /**
@@ -21,15 +17,6 @@ class ProductFilter
      */
     public function apply(Builder $query, ProductFilterData $data): Builder
     {
-        $values = [
-            'q'           => $data->q,
-            'price_from'  => $data->priceFrom,
-            'price_to'    => $data->priceTo,
-            'category_id' => $data->categoryId,
-            'in_stock'    => $data->inStock,
-            'rating_from' => $data->ratingFrom,
-        ];
-
         foreach ($this->filters as $filter) {
             $value = $values[$filter->key()] ?? null;
 

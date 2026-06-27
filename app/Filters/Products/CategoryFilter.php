@@ -2,6 +2,7 @@
 
 namespace App\Filters\Products;
 
+use App\DTO\ProductFilterData;
 use App\Filters\Contracts\ProductFilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -12,8 +13,10 @@ class CategoryFilter implements ProductFilterInterface
         return 'category_id';
     }
 
-    public function apply(Builder $query, mixed $value): void
+    public function apply(Builder $query, ProductFilterData $filterData): void
     {
-        $query->where('category_id', (int) $value);
+        if ($filterData->categoryId !== null) {
+            $query->where('category_id', $filterData->categoryId);
+        }
     }
 }
