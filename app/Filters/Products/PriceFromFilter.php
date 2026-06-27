@@ -2,18 +2,18 @@
 
 namespace App\Filters\Products;
 
+use App\DTO\ProductFilterData;
 use App\Filters\Contracts\ProductFilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 class PriceFromFilter implements ProductFilterInterface
 {
-    public function key(): string
+    public function apply(Builder $query, ProductFilterData $filterData): void
     {
-        return 'price_from';
-    }
+        if ($filterData->priceFrom === null) {
+            return;
+        }
 
-    public function apply(Builder $query, mixed $value): void
-    {
-        $query->where('price', '>=', (float) $value);
+        $query->where('price', '>=', (float) $filterData->priceFrom);
     }
 }

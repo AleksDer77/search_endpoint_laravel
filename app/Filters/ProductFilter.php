@@ -3,13 +3,13 @@
 namespace App\Filters;
 
 use App\DTO\ProductFilterData;
-use App\Filters\Contracts\ProductFilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProductFilter
 {
     public function __construct(
         private readonly ProductSorter $sorter,
+        private readonly array $filters,
     ) {}
 
     /**
@@ -18,11 +18,7 @@ class ProductFilter
     public function apply(Builder $query, ProductFilterData $data): Builder
     {
         foreach ($this->filters as $filter) {
-            $value = $values[$filter->key()] ?? null;
-
-            if ($value !== null) {
-                $filter->apply($query, $value);
-            }
+            $filter->apply($query, $data);
         }
 
         $this->sorter->apply($query, $data->sort);

@@ -8,13 +8,13 @@ use App\Http\Requests\ProductsIndexRequest;
 final readonly class ProductFilterData
 {
     public function __construct(
-        public ?string $q,
-        public ?float $priceFrom,
-        public ?float $priceTo,
-        public ?int $categoryId,
-        public ?bool $inStock,
-        public ?float $ratingFrom,
-        public ?ProductSort $sort,
+        public ?string $q = null,
+        public ?float $priceFrom = null,
+        public ?float $priceTo = null,
+        public ?int $categoryId = null,
+        public ?bool $inStock = null,
+        public ?float $ratingFrom = null,
+        public ?ProductSort $sort = null,
     ) {}
 
     public static function fromRequest(ProductsIndexRequest $request): self

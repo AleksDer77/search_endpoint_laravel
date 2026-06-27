@@ -2,22 +2,18 @@
 
 namespace App\Filters\Products;
 
+use App\DTO\ProductFilterData;
 use App\Filters\Contracts\ProductFilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 class SearchFilter implements ProductFilterInterface
 {
-    public function key(): string
+    public function apply(Builder $query, ProductFilterData $filterData): void
     {
-        return 'q';
-    }
-
-    public function apply(Builder $query, mixed $value): void
-    {
-        if (empty($value)) {
+        if ($filterData->q === null) {
             return;
         }
 
-        $query->where('name', 'LIKE', '%' . $value . '%');
+        $query->where('name', 'LIKE', '%' . $filterData->q . '%');
     }
 }

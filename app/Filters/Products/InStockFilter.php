@@ -2,18 +2,18 @@
 
 namespace App\Filters\Products;
 
+use App\DTO\ProductFilterData;
 use App\Filters\Contracts\ProductFilterInterface;
 use Illuminate\Database\Eloquent\Builder;
 
 class InStockFilter implements ProductFilterInterface
 {
-    public function key(): string
+    public function apply(Builder $query, ProductFilterData $filterData): void
     {
-        return 'in_stock';
-    }
+        if ($filterData->inStock === null) {
+            return;
+        }
 
-    public function apply(Builder $query, mixed $value): void
-    {
-        $query->where('in_stock', filter_var($value, FILTER_VALIDATE_BOOLEAN));
+        $query->where('in_stock', filter_var($filterData->inStock, FILTER_VALIDATE_BOOLEAN));
     }
 }
